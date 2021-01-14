@@ -1,0 +1,52 @@
+---
+title: "ESM 244 Lab 2"
+author: "Jennifer Truong"
+date: "1/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set
+
+library(tidyverse)
+library(janitor)
+library(palmerpenguins)
+library(here)
+
+# For PCA
+library(ggfortify)
+
+# For ggplot customization
+library(readxl)
+library(gghighlight)
+library(lubridate)
+library(plotly)
+
+# To make compound figures:
+library(patchwork)
+```
+
+## Part 1: PCA with Penguins
+
+```{r}
+penguin_pca <- penguins %>%
+  select(body_mass_g, ends_with("_mm")) %>%
+  drop_na() %>% # Drop NA in all variables
+  scale() %>% # Scale all variables to give equal weight
+  prcomp() # Run PCA
+
+penguin_pca$rotation # PCA Loadings
+
+penguin_complete <- penguins %>%
+  drop_na(body_mass_g, ends_with("_mm")) # Drop NA from only these variables
+
+# Create bi-plot ----
+
+autoplot(penguin_pca,
+         data = penguin_complete,
+         colour = 'species',
+         loadings = TRUE, # Show PCA loadings
+         loadings.label = TRUE) + # Label PCA loadings
+  theme_minimal()
+```
+
