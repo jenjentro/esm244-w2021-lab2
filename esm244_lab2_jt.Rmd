@@ -50,3 +50,42 @@ autoplot(penguin_pca,
   theme_minimal()
 ```
 
+### Part 2: ggplot2 customization & reading in different file types
+
+#### Read in an .xlsx file & do some wrangling
+
+```{r}
+
+fish_noaa <- read_excel(here("data", "foss_landings.xlsx")) %>%
+  clean_names() %>%
+  mutate(across(where(is.character), tolower)) %>% # Change to lower case across columns that are character class
+  mutate(nmfs_name = str_sub(nmfs_name, end = -4)) %>% # Transform nmfs_name to remove last four characters in string
+  filter(confidentiality == "public") # Keep only rows that are public
+
+```
+
+Make a customized graph:
+
+```{r}
+fish_plot <- ggplot(data = fish_noaa, 
+                    aes(x = year, y = pounds)) +
+  geom_line(aes(color = nmfs_name),
+            show.legend = FALSE) +
+  theme_minimal()
+
+ggplotly(fish_plot) # Interactive plot
+
+ggplot(data = fish_noaa, 
+       aes(x = year, y = pounds, group = nmfs_name)) +
+  geom_line(aes(color = nmfs_name)) +
+  theme_minimal() +
+  gghighlight(max(pounds) > 1e8)
+```
+
+#### Read in data from a URL, `lubridate()`, `mutate()`, make a graph with months in logical order
+
+```{r}
+monroe_wt <- read_csv("https://data.bloomington.in.gov/dataset/2c81cfe3-62c2-46ed-8fcf-83c1880301d1/resource/13c8f7aa-af51-4008-80a9-56415c7c931e/download/mwtpdailyelectricitybclear.csv") %>%
+  clean_names()
+```
+
