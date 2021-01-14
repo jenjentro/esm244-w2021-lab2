@@ -88,4 +88,10 @@ ggplot(data = fish_noaa,
 monroe_wt <- read_csv("https://data.bloomington.in.gov/dataset/2c81cfe3-62c2-46ed-8fcf-83c1880301d1/resource/13c8f7aa-af51-4008-80a9-56415c7c931e/download/mwtpdailyelectricitybclear.csv") %>%
   clean_names()
 ```
+```{r}
+monroe_ts <- monroe_wt %>%
+  mutate(date = mdy(date)) %>%
+  mutate(record_month = month(date)) %>%
+  mutate(month_name = month.abb[record_month])
+```
 
