@@ -120,5 +120,6 @@ graph_c <- (graph_a | graph_b) / fish_plot & theme_dark()
 
 graph_c
 
+ggsave(here("fig", "graph_c_jt.png"), width = 5, height = 6)
 ```
 
